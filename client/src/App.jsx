@@ -349,6 +349,14 @@ async function analyzePhotos(photos) {
 
 function Tag({ fieldKey, label, value, onChange, copied, onCopy }) {
   const isLong = fieldKey === "description";
+  const textareaRef = useRef(null);
+
+  useEffect(() => {
+    if (!isLong || !textareaRef.current) return;
+    textareaRef.current.style.height = "auto";
+    textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+  }, [isLong, value]);
+
   return (
     <div className="relative flex-shrink-0" style={{ filter: "drop-shadow(0 3px 6px rgba(0,0,0,0.35))" }}>
       <div
@@ -385,10 +393,11 @@ function Tag({ fieldKey, label, value, onChange, copied, onCopy }) {
         </div>
         {isLong ? (
           <textarea
+            ref={textareaRef}
             value={value}
             onChange={(e) => onChange(e.target.value)}
             rows={4}
-            className="w-full bg-transparent resize-none outline-none text-[14px] leading-snug"
+            className="w-full bg-transparent resize-none outline-none overflow-hidden text-[14px] leading-snug"
             style={{ fontFamily: "'Bitter', serif", color: COLORS.ink, width: "260px" }}
           />
         ) : (
